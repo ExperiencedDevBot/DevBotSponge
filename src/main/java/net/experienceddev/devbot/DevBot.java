@@ -57,6 +57,8 @@ public class DevBot {
         instance = this;
     }
 
+    // TODO: Add reload command cause nucleus fucks the other one
+
     @Listener
     public void onInit(GameInitializationEvent event){
         registerEvents();
@@ -94,7 +96,7 @@ public class DevBot {
     @Listener
     public void reload(GameReloadEvent e) {
         loadConfig();
-        devMqttClient = new DevMqtt(logger);
+        //devMqttClient = new DevMqtt(logger);
     }
 
     private void registerEvents(){

@@ -22,6 +22,8 @@ public class DevMessageObject {
     private String discordName;
     private String discordChannelID;
 
+    // TODO: look at LOMBOK
+
     private String notes;
 
     public DevMessageObject() {
@@ -119,6 +121,6 @@ public class DevMessageObject {
         msg = msg.replace("%u", this.discordName);
         msg = msg.replace("%m", this.msg);
 
-        //DevBot.publicChat.send(Utils.format(msg));
+        DevBot.publicChat.send(Utils.format(msg));
     }
 }

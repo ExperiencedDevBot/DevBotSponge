@@ -12,7 +12,7 @@ public class DevMqtt {
 
     private MqttConnectOptions mqttOptions;
 
-    DevMqtt(Logger logger){
+    DevMqtt(Logger logger) throws MqttException {
         this.logger = logger;
         mqttOptions = new MqttConnectOptions();
         mqttOptions.setCleanSession(true);
@@ -21,15 +21,9 @@ public class DevMqtt {
         mqttOptions.setWill(DevBot.cfg.mqttTopic + "/will", "Disconnected!".getBytes(), 0, false);
 
         createClient();
-        try {
-            mqttClient.connect(mqttOptions);
-            while(!mqttClient.isConnected()){
-                wait();
-            }
-            mqttClient.subscribe(DevBot.cfg.mqttTopic + "/toJava");
-        } catch (MqttException | InterruptedException e) {
-            e.printStackTrace();
-        }
+
+        mqttClient.connect(mqttOptions);
+        mqttClient.subscribe(DevBot.cfg.mqttTopic + "/toJava");
     }
 
     public void publishMessage(DevMessageObject msgObj){
@@ -52,19 +46,17 @@ public class DevMqtt {
     }
 
     public void restartClient() throws MqttException {
-        stopClient();
+        //stopClient();
         createClient();
         mqttClient.connect();
         mqttClient.subscribe(DevBot.cfg.mqttTopic + "/toJava");
     }
 
-    private void createClient(){
+    private void createClient() throws MqttException {
         String brokerString = "tcp://" + DevBot.cfg.mqttBrokerIP + ":" + DevBot.cfg.mqttBrokerPort;
-        try {
-            mqttClient = new MqttClient(brokerString, MqttClient.generateClientId()); // TODO: Disable folder generation https://github.com/eclipse/paho.mqtt.java/issues/777
-        } catch (MqttException e) {
-            e.printStackTrace();
-        }
+
+        mqttClient = new MqttClient(brokerString, MqttClient.generateClientId()); // TODO: Disable folder generation https://github.com/eclipse/paho.mqtt.java/issues/777
+
         createCallbacks();
     }
 
@@ -73,6 +65,7 @@ public class DevMqtt {
             @Override
             public void connectionLost(Throwable cause) {
                 logger.warn("MQTT was disconnected: " + cause.getMessage());
+                cause.printStackTrace();
                 try {
                     restartClient();
                 } catch (MqttException e) {
@@ -83,7 +76,9 @@ public class DevMqtt {
             @Override
             public void messageArrived(String topic, MqttMessage message) throws Exception {
                 logger.info("Message has arrived!");
-                DevMessageObject msgObj = gson.fromJson(new String(message.getPayload()), DevMessageObject.class);
+                String json = new String(message.getPayload());
+                logger.info(json);
+                DevMessageObject msgObj = gson.fromJson(json, DevMessageObject.class);
                 logger.info("Message has been deserialized!");
                 msgObj.handle();
             }
