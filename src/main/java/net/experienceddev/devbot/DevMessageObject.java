@@ -3,22 +3,23 @@ package net.experienceddev.devbot;
 import java.util.UUID;
 
 public class DevMessageObject {
+
     public enum TYPE{
         CONNECTED,
         DISCONNECTED,
         CHAT,
         VERIFY,
         STATUS_ONLINE,
-        STATUS_OFFLINE
+        STATUS_OFFLINE,
+        STATUS_UPDATE
     }
     private String topic;
     private String msg;
     private TYPE type;
-    /*private DevPlayer player;
-    private DevUser user;*/
     private UUID minecraftUUID;
     private String minecraftName;
     private String discordUUID;
+    private String discordName;
     private String discordChannelID;
 
     private String notes;
@@ -97,12 +98,27 @@ public class DevMessageObject {
             this.discordChannelID = DevBot.cfg.discordChannelID;
         }
     }
-}
 
-class DevPlayer {
-    private String UUID;
-}
+    public void handle() {
+        switch (this.type){
+            case CHAT:
+                doChat();
+                break;
+            case VERIFY:
+                break;
+            case STATUS_UPDATE:
+                break;
+            default:
+                break;
+        }
 
-class DevUser {
-    private String discordUserID;
+    }
+
+    private void doChat(){
+        String msg = DevBot.cfg.discordChatFormat;
+        msg = msg.replace("%u", this.discordName);
+        msg = msg.replace("%m", this.msg);
+
+        //DevBot.publicChat.send(Utils.format(msg));
+    }
 }

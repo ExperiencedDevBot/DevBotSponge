@@ -26,5 +26,6 @@ public class Config {
     @Setting public String mqttTopic = "";
     @Setting public String discordChannelID = "";
     @Setting public Map<String, String> chatChannelDiscordChannel = ImmutableMap.of();
+    @Setting public String discordChatFormat = "";
 
 }

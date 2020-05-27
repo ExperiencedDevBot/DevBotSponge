@@ -19,6 +19,7 @@ import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameStartedServerEvent;
 import org.spongepowered.api.event.game.state.GameStoppedEvent;
 import org.spongepowered.api.plugin.Plugin;
+import org.spongepowered.api.text.channel.MessageChannel;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -43,6 +44,8 @@ public class DevBot {
     Path path;
     @Inject @DefaultConfig(sharedRoot = false)
     ConfigurationLoader<CommentedConfigurationNode> loader;
+
+    public static MessageChannel publicChat = Sponge.getServer().getBroadcastChannel();
 
     public static Config cfg;
     public static DevMqtt devMqttClient;

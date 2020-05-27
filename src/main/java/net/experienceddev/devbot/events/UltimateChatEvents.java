@@ -28,16 +28,5 @@ public class UltimateChatEvents {
         msgObj.setType(DevMessageObject.TYPE.CHAT);
         msgObj.setNotes("ChannelName: " + event.getChannel().getName());
         DevBot.devMqttClient.publishMessage(msgObj);
-
-        /*if (event.getChannel().getName().equalsIgnoreCase("globalddd")) {
-            Player player = (Player) event.getSender();
-            Text message = event.getMessage();
-            DevMessageObject msgObj = new DevMessageObject();
-            msgObj.setMinecraftUUID(player.getUniqueId());
-            msgObj.setMinecraftName(player.getName());
-            msgObj.setMsg(message.toPlain());
-            msgObj.setType(DevMessageObject.TYPE.CHAT);
-            DevBot.devMqttClient.publishMessage(msgObj);
-        }*/
     }
 }
